@@ -27,8 +27,8 @@ const EditTrainModal: React.FC<Props> = ({
     if (train) {
       setFrom(train.from);
       setTo(train.to);
-      setDeparture(new Date(train.departure).toISOString().slice(0, 16)); // YYYY-MM-DDTHH:MM
-      setArrival(new Date(train.arrival).toISOString().slice(0, 16)); // YYYY-MM-DDTHH:MM
+      setDeparture(new Date(train.departure).toISOString().slice(0, 16));
+      setArrival(new Date(train.arrival).toISOString().slice(0, 16));
     }
   }, [train]);
 

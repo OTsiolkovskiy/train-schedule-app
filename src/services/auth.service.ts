@@ -1,3 +1,4 @@
+import { IUser } from "@/types/user.interface";
 import axios from "axios";
 
 interface BaseAuthData {
@@ -24,15 +25,28 @@ export const AuthService = {
       withCredentials: true, 
     });
   },
-  // sign_out: async () => {
-  //   try {
-  //     const response = await axios.post(${BASE_URL}/auth/sign-out, {}, {
-  //       withCredentials: true, 
-  //     });
-  //     return response;
-  //   } catch (error) {
-  //     console.error('Error sign-out', error);
-  //     throw error;
-  //   }
-  // },
+
+  getUserSessionInfo: async (): Promise<IUser> => {
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/session`, {}, {
+        withCredentials: true,
+      });
+      return response.data as IUser;
+    } catch (error) {
+      console.error('Error fetching user session data:', error);
+      throw error;
+    }
+  },
+
+  log_out: async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/sign-out`, {}, {
+        withCredentials: true, 
+      });
+      return response;
+    } catch (error) {
+      console.error('Error sign-out', error);
+      throw error;
+    }
+  },
 };

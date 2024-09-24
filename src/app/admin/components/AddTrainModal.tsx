@@ -22,8 +22,8 @@ const AddTrainModal: React.FC<Props> = ({ open, handleClose, refreshTrains }) =>
     const newTrain: ITrain = { 
       from, 
       to, 
-      departure: departure + ":00Z", // Додаємо секунди та Z для UTC
-      arrival: arrival + ":00Z" // Аналогічно для arrival
+      departure: departure + ":00Z",
+      arrival: arrival + ":00Z"
     };
     
     try {
@@ -32,7 +32,7 @@ const AddTrainModal: React.FC<Props> = ({ open, handleClose, refreshTrains }) =>
 
       setFrom("");
       setTo("");
-      setDeparture('');  // Можливо, ви хочете знову задати поточний час
+      setDeparture('');
       setArrival('');
 
       handleClose();
@@ -46,6 +46,7 @@ const AddTrainModal: React.FC<Props> = ({ open, handleClose, refreshTrains }) =>
       <div style={{ padding: 20, backgroundColor: "white", borderRadius: 5 }}>
         <Typography variant="h6">Add New Train</Typography>
         <TextField
+          id="outlined-required"
           label="From"
           value={from}
           onChange={(e) => setFrom(e.target.value)}

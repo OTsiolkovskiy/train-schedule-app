@@ -7,6 +7,9 @@ import { Container, Typography, CircularProgress, List, Button } from "@mui/mate
 import TrainCard from "../components/TrainCard";
 import AddTrainModal from "../components/AddTrainModal";
 import EditTrainModal from "../components/EditTrainModal";
+import { IUser } from "@/types/user.interface";
+import { AuthService } from "@/services/auth.service";
+import { NavBar } from "../components/NavBar";
 
 export default function Home() {
   const [trains, setTrains] = useState<ITrain[]>([]);
@@ -15,10 +18,18 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedTrain, setSelectedTrain] = useState<ITrain | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
+    const getUser = async () => {
+      const user = await AuthService.getUserSessionInfo();
+      setUser(user);
+    };
+    getUser();
     fetchTrains();
   }, []);
+
+  console.log(user);
 
   const fetchTrains = async () => {
     try {
@@ -76,6 +87,7 @@ export default function Home() {
 
   return (
     <Container>
+      <NavBar userName={user ? user.name : ''} />
       <Typography variant="h4" gutterBottom>Train List</Typography>
       <Button variant="contained" color="primary" onClick={handleOpen}>
         Add Train
@@ -103,5 +115,6 @@ export default function Home() {
         />
       )}
     </Container>
+
   );
 }
