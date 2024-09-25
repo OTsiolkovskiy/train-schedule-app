@@ -3,7 +3,7 @@
 import { TrainService } from "@/services/train.service";
 import { ITrain } from "@/types/train.interface";
 import { useEffect, useState } from "react";
-import { Container, Typography, CircularProgress, List, Button } from "@mui/material";
+import { Container, Typography, CircularProgress, List, Button, Box } from "@mui/material";
 import TrainCard from "../components/TrainCard";
 import AddTrainModal from "../components/AddTrainModal";
 import EditTrainModal from "../components/EditTrainModal";
@@ -86,12 +86,37 @@ export default function Home() {
   }
 
   return (
-    <Container>
+    <Container sx={{ padding: "24px", backgroundColor: "#f4f6f8", minHeight: "100vh" }}>
       <NavBar userName={user ? user.name : ''} />
-      <Typography variant="h4" gutterBottom>Train List</Typography>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Add Train
-      </Button>
+
+      <Box 
+    display="flex" 
+    justifyContent="space-between" 
+    alignItems="center" 
+    mt={5}
+    mb={3}
+    ml={1}
+    mr={1}
+  >
+    
+    <Typography 
+      variant="h4" 
+      fontWeight="bold" 
+      sx={{ color: "#333", textAlign: "center", flexGrow: 1 }}
+    >
+      Train List
+    </Typography>
+
+    <Button 
+      variant="contained" 
+      color="primary" 
+      size="large" 
+      sx={{ textTransform: "none", padding: "10px 20px", borderRadius: "8px" }} 
+      onClick={handleOpen}
+    >
+      Add Train
+    </Button>
+  </Box>
       <List>
         {trains.map((train) => (
           <>

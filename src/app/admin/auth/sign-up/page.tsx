@@ -11,16 +11,6 @@ import { AuthService } from '@/services/auth.service';
 const SignUp = () => {
   const { signUp, loading, error } = useSignUp();
 
-  const test = async () => {
-    const user = {
-      name: 'Oleh',
-      email: 'ooo@kkjj',
-      password: '11111111'
-    }
-
-    await AuthService.sign_up(user);
-  };
-
   const initialValues = {
     name: '',
     email: '',
@@ -34,13 +24,13 @@ const SignUp = () => {
         initialValues={initialValues}
         validationSchema={signUpSchema}
         onSubmit={(values) => {
-          const { name, email, password } = values; // Вибираємо лише потрібні поля
-          signUp({ name, email, password }); // Передаємо потрібні поля у функцію signUp
+          const { name, email, password } = values;
+          signUp({ name, email, password });
         }}
       >
         {({ errors, touched, isValid, dirty }) => (
           <Form>
-            <Box display="flex" flexDirection="column" gap="1.5rem">
+            <Box display="flex" flexDirection="column" gap="1.5rem" sx={{ width: '100%' }}>
               <Typography variant="h4" color="white">Create Account</Typography>
 
               {error && <Typography color="red">{error}</Typography>}
@@ -105,7 +95,6 @@ const SignUp = () => {
           </Form>
         )}
       </Formik>
-      <button onClick={test}>test</button>
     </Box>
   );
 };

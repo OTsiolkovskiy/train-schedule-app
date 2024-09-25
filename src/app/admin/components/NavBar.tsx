@@ -1,5 +1,5 @@
 import { AuthService } from "@/services/auth.service";
-import { Avatar, Box, Button } from "@mui/material"
+import { AppBar, Avatar, Box, Button, Toolbar, Typography } from "@mui/material"
 import { AdminRoutes } from "../auth/shared/routes";
 import { useRouter } from "next/navigation";
 
@@ -25,14 +25,19 @@ export const NavBar: React.FC<Props> = ({ userName }) => {
   }
 
   return (
-    <Box>
-      <Avatar {...stringAvatar(userName)} />
-      <Button 
-        variant="contained" 
-        color="success" 
-        onClick={handleLogOut}>
-        Log Out
-      </Button>
-    </Box>
+    <AppBar position="static">
+      <Toolbar sx={{ justifyContent: "flex-end" }}>
+        <Typography variant="h6" sx={{ mr: 2 }}>
+          {userName}
+        </Typography>
+        <Avatar {...stringAvatar(userName)} sx={{ mr: 2 }} />
+        <Button 
+          variant="contained" 
+          color="success" 
+          onClick={handleLogOut}>
+          Log Out
+        </Button>
+      </Toolbar>
+    </AppBar>
   )
 }

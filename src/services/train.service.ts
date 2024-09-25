@@ -42,5 +42,23 @@ export const TrainService = {
       console.error('Error editing train:', error);
       throw error;
     }
-  }
+  },
+
+  findTrainsByCity: async (from: string, to: string): Promise<ITrain[]> => {
+    try {
+      const response = await axios.get(`http://localhost:5050/train`, {
+        params: {
+          from,
+          to,
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching trains by city:", error);
+      throw error;
+    }
+    
+  },
+
 }
