@@ -19,7 +19,10 @@ const SignUp = () => {
   };
 
   return (
-    <Box sx={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Box sx={{ margin: "auto", height: "100vh", width: "50vw"}}>
+       <Link href={`/${AdminRoutes.home}`} passHref >
+          Go Home
+        </Link>
       <Formik
         initialValues={initialValues}
         validationSchema={signUpSchema}

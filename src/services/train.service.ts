@@ -1,5 +1,6 @@
 import { ITrain } from "@/types/train.interface";
 import axios from "axios";
+import { Dayjs } from 'dayjs';
 
 // const BASE_URL = process.env.NEXT_PUBLIC_API
 
@@ -44,21 +45,23 @@ export const TrainService = {
     }
   },
 
-  findTrainsByCity: async (from: string, to: string): Promise<ITrain[]> => {
+  findTrainsByCity: async (from: string, to: string, departureFrom?: Dayjs | null, departureUntil?: Dayjs | null): Promise<ITrain[]> => {
     try {
-      const response = await axios.get(`http://localhost:5050/train`, {
+      const response = await axios.get(`http://localhost:5050/train/search`, {
         params: {
           from,
           to,
+          departureFrom: departureFrom ? departureFrom.toISOString() : undefined,
+          departureUntil: departureUntil ? departureUntil.toISOString() : undefined,
         },
         withCredentials: true,
       });
+
       return response.data;
     } catch (error) {
       console.error("Error fetching trains by city:", error);
       throw error;
     }
-    
   },
 
 }

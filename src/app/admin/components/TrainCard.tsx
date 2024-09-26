@@ -4,18 +4,18 @@ import { Box, Button, Card, CardContent, Typography } from "@mui/material"
 
 type Props = {
   train: ITrain,
-  handleDeleteTrain: (trainId: number) => void,
-  handleEditOpen: (train: ITrain) => void;
+  handleDeleteTrain?: (trainId: number) => void,
+  handleEditOpen?: (train: ITrain) => void;
+  showActions: boolean
 }
 
 const TrainCard: React.FC<Props> = ({ 
   train, 
   handleDeleteTrain,
   handleEditOpen,
+  showActions = true,
 }) => {
 
-  
-  
   return (
     <Card 
       variant="outlined" 
@@ -42,8 +42,10 @@ const TrainCard: React.FC<Props> = ({
         <Typography color="textSecondary">{`Arrival: ${formatDate(train.arrival)}`}</Typography>
       </CardContent>
 
-      <Box display="flex" flexDirection="column" gap="15px" sx={{ marginLeft: '16px' }}>
-        <Button
+      {showActions && (
+        <Box display="flex" flexDirection="column" gap="15px" sx={{ marginLeft: '16px' }}>
+        {handleDeleteTrain && (
+          <Button
           variant="contained"
           color="secondary"
           onClick={() => train.id && handleDeleteTrain(train.id)}
@@ -51,8 +53,10 @@ const TrainCard: React.FC<Props> = ({
         >
           Delete
         </Button>
+        )}
 
-        <Button
+        {handleEditOpen && (
+          <Button
           variant="contained"
           color="primary"
           onClick={() => handleEditOpen(train)}
@@ -60,7 +64,9 @@ const TrainCard: React.FC<Props> = ({
         >
           Edit
         </Button>
+        )}
       </Box>
+      )}
     </Card>
   )
 };

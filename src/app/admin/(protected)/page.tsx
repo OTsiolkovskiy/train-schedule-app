@@ -125,6 +125,7 @@ export default function Home() {
               train={train} 
               handleDeleteTrain={handleDeleteTrain}
               handleEditOpen={handleEditOpen}
+              showActions={true}
              />
           </>
         ))}

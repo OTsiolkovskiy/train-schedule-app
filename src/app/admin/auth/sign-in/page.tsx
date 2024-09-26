@@ -1,10 +1,12 @@
 'use client';
 
 import { AuthService } from "@/services/auth.service";
-import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useRouter } from "next/navigation";
 import * as yup from 'yup';
+import { AdminRoutes } from "../shared/routes";
+import Link from "next/link";
 
 interface InitialValuesType {
   email: string,
@@ -53,6 +55,13 @@ const SignInPage = () => {
 
   return (
     <div>
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Link href={`/${AdminRoutes.home}`} passHref >
+          Go Home
+        </Link>
+      </Box>
+
+
       <Formik 
         initialValues={initialValues} 
         validationSchema={validationSchema}
@@ -160,6 +169,10 @@ const SignInPage = () => {
                         >
                           Submit
                         </Button>
+                        <Typography 
+          variant="body1">
+          Already have no an Account? <Link href={`/${AdminRoutes.signUp}`}>Sign Up</Link>
+        </Typography>
                       </Box>
                     </Form>
                   </Box>
@@ -167,6 +180,7 @@ const SignInPage = () => {
               </Box>
             </Grid>
           </Grid>
+          
         </Box>
 
         {/* <Box>
@@ -184,6 +198,9 @@ const SignInPage = () => {
             </Typography>
           </Box>
         </Box> */}
+
+        
+
       </Box>
         )}
       </Formik>

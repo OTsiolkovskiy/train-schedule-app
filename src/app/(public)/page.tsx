@@ -1,21 +1,67 @@
 'use client';
 
-import axios from 'axios';
 import { useState } from 'react';
-import { TextField, Button, Box, Typography, Container, List, ListItem, ListItemText } from '@mui/material';
+import { TextField, Button, Box, Typography, Container, List, Autocomplete } from '@mui/material';
 import { ITrain } from '@/types/train.interface';
 import { TrainService } from '@/services/train.service';
+import TrainCard from '../admin/components/TrainCard';
+
+import dayjs, { Dayjs } from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ICityOption } from '@/types/city.interface';
+import { fetchCities } from '../utils/fetchCities';
 
 export default function PublicHome() {
-  const [fromCity, setFromCity] = useState('');
-  const [toCity, setToCity] = useState('');
+  const [fromCity, setFromCity] = useState<string | null>('');
+  const [toCity, setToCity] = useState<string | null>('');
   const [trains, setTrains] = useState<ITrain[]>([]);
+  const [departureFrom, setDepartureFrom] = useState<Dayjs | null>(null);
+  const [departureUntil, setDepartureUntil] = useState<Dayjs | null>(null);
+
+  const [fromCityOptions, setFromCityOptions] = useState<ICityOption[]>([]);
+  const [toCityOptions, setToCityOptions] = useState<ICityOption[]>([]);
+
+  const handleFromCityInputChange = async (
+    event: React.SyntheticEvent<Element, Event>, 
+    value: string, 
+  ) => {
+    setFromCity(value);
+
+    if (value) {
+      const cities = await fetchCities(value);
+      setFromCityOptions(cities);
+    } else {
+      setFromCityOptions([]);
+    }
+
+  };
+
+  const handleToCityInputChange = async (
+    event: React.SyntheticEvent<Element, Event>, 
+    value: string,
+  ) => {
+    setToCity(value);
+
+    if (value) {
+      const cities = await fetchCities(value);
+      setToCityOptions(cities);
+    } else {
+      setToCityOptions([]);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    if (!fromCity || !toCity) {
+      console.error("Please provide both 'From' and 'To' cities.");
+      return;
+    }
+  
     try {
-      const data = await TrainService.findTrainsByCity(fromCity, toCity);
+      const data = await TrainService.findTrainsByCity(fromCity, toCity, departureFrom, departureUntil );
       setTrains(data);
     } catch (error) {
       console.error("Error fetching trains:", error);
@@ -24,6 +70,8 @@ export default function PublicHome() {
 
   return (
     <Container maxWidth="sm">
+      
+
       <Box 
         display="flex" 
         flexDirection="column" 
@@ -43,22 +91,64 @@ export default function PublicHome() {
           gap={2}
           width="100%"
         >
-          <TextField
-            label="From"
-            variant="outlined"
-            fullWidth
-            value={fromCity}
-            onChange={(e) => setFromCity(e.target.value)}
-            placeholder="Enter departure city"
+         <Autocomplete
+            options={fromCityOptions}
+            getOptionLabel={(option) => option.city}
+            value={fromCityOptions.find(option => option.city === fromCity) || null}
+            onInputChange={handleFromCityInputChange}
+            renderInput={(params) => (
+              <TextField 
+                {...params} 
+                label="From" 
+                variant="outlined" 
+                fullWidth 
+                placeholder="Enter departure city"
+              />
+            )}
           />
-          <TextField
-            label="To"
-            variant="outlined"
-            fullWidth
-            value={toCity}
-            onChange={(e) => setToCity(e.target.value)}
-            placeholder="Enter destination city"
+
+          <Autocomplete
+            options={toCityOptions}
+            getOptionLabel={(option) => option.city}
+            value={toCityOptions.find(option => option.city === toCity) || null}
+            onInputChange={handleToCityInputChange}
+            renderInput={(params) => (
+              <TextField 
+                {...params} 
+                label="To" 
+                variant="outlined" 
+                fullWidth 
+                placeholder="Enter destination city"
+              />
+            )}
           />
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Departure From"
+              value={departureFrom}
+              onChange={(newValue) => {
+                if (newValue && newValue.isAfter(dayjs())) {
+                  setDepartureFrom(newValue);
+                }
+              }}
+              minDate={dayjs()}
+            />
+          </LocalizationProvider>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Departure Until"
+              value={departureUntil}
+              onChange={(newValue) => {
+                if (newValue && newValue.isAfter(dayjs())) {
+                  setDepartureUntil(newValue);
+                }
+              }}
+              minDate={dayjs()}
+            />
+          </LocalizationProvider>
+
           <Button 
             variant="contained" 
             color="primary" 
@@ -76,12 +166,11 @@ export default function PublicHome() {
             </Typography>
             <List>
               {trains.map((train) => (
-                <ListItem key={train.id} divider>
-                  <ListItemText
-                    primary={`From: ${train.from} To: ${train.to}`}
-                    secondary={`Departure: ${train.departure} Arrival: ${train.arrival}`}
-                  />
-                </ListItem>
+                <TrainCard 
+                  key={train.id} 
+                  train={train} 
+                  showActions={false}
+                />
               ))}
             </List>
           </Box>
