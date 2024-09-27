@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { TextField, Button, Box, Typography, Container, List, Autocomplete } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Button, Box, Typography, Container, List } from '@mui/material';
 import { ITrain } from '@/types/train.interface';
 import { TrainService } from '@/services/train.service';
-import TrainCard from '../admin/components/TrainCard';
 
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Dayjs } from 'dayjs';
 import { ICityOption } from '@/types/city.interface';
 import { fetchCities } from '../utils/fetchCities';
+
+import { CityTextFild } from './components/CityTextField';
+import { TripDatePicker } from './components/TripDatePicker';
+import TrainCard from './components/TrainCard';
+
 
 export default function PublicHome() {
   const [fromCity, setFromCity] = useState<string | null>('');
@@ -22,6 +23,28 @@ export default function PublicHome() {
 
   const [fromCityOptions, setFromCityOptions] = useState<ICityOption[]>([]);
   const [toCityOptions, setToCityOptions] = useState<ICityOption[]>([]);
+
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) { // Змінюйте значення за потреби
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleFromCityInputChange = async (
     event: React.SyntheticEvent<Element, Event>, 
@@ -55,6 +78,8 @@ export default function PublicHome() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('Hello')
+
     if (!fromCity || !toCity) {
       console.error("Please provide both 'From' and 'To' cities.");
       return;
@@ -69,98 +94,138 @@ export default function PublicHome() {
   };
 
   return (
-    <Container maxWidth="sm">
-      
+    <>
+      <Container maxWidth={false} 
+        disableGutters 
+        sx={{
+        width: '100vw',
+        backgroundColor: '#636e7e',
+        minHeight: '100vh',
+        margin: 0,
+        color: 'white',
+      }}>
 
-      <Box 
-        display="flex" 
-        flexDirection="column" 
-        alignItems="center" 
-        justifyContent="center" 
-        sx={{ mt: 5, mb: 5 }}
+      <Box
+        sx={{
+          width: '100%',
+          minHeight: '400px',
+          display: 'flex',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          backgroundImage: 'url("/img/photo.jpg")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       >
-        <Typography variant="h4" gutterBottom>
-          Train Search
-        </Typography>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          display="flex"
-          flexDirection="column"
-          gap={2}
-          width="100%"
-        >
-         <Autocomplete
-            options={fromCityOptions}
-            getOptionLabel={(option) => option.city}
-            value={fromCityOptions.find(option => option.city === fromCity) || null}
-            onInputChange={handleFromCityInputChange}
-            renderInput={(params) => (
-              <TextField 
-                {...params} 
-                label="From" 
-                variant="outlined" 
-                fullWidth 
-                placeholder="Enter departure city"
-              />
-            )}
-          />
+        <Box sx={{ position: 'relative', zIndex: 2, color: 'white' }}>
+          <Typography variant="h4">
+            
+          <Box 
+            display="flex" 
+            flexDirection="column" 
+            alignItems="center" 
+            justifyContent="center" 
+            sx={{ mt: 5, mb: 5 }}
+          >
+            <Typography variant="h2" gutterBottom sx={{ mb: 10 }}>
+              Train route
+            </Typography>
 
-          <Autocomplete
-            options={toCityOptions}
-            getOptionLabel={(option) => option.city}
-            value={toCityOptions.find(option => option.city === toCity) || null}
-            onInputChange={handleToCityInputChange}
-            renderInput={(params) => (
-              <TextField 
-                {...params} 
-                label="To" 
-                variant="outlined" 
-                fullWidth 
-                placeholder="Enter destination city"
-              />
-            )}
-          />
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            width="100%"
+            mb={5}
+            flexGrow={1}
+          >
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Departure From"
-              value={departureFrom}
-              onChange={(newValue) => {
-                if (newValue && newValue.isAfter(dayjs())) {
-                  setDepartureFrom(newValue);
-                }
-              }}
-              minDate={dayjs()}
-            />
-          </LocalizationProvider>
+            <Box 
+              display="flex" 
+              flexDirection={{ xs: 'column', sm: 'row' }} 
+              gap="10px"
+            >
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Departure Until"
-              value={departureUntil}
-              onChange={(newValue) => {
-                if (newValue && newValue.isAfter(dayjs())) {
-                  setDepartureUntil(newValue);
-                }
-              }}
-              minDate={dayjs()}
-            />
-          </LocalizationProvider>
+              <Box flex={1}>
+                <CityTextFild cityOptions={fromCityOptions} city={fromCity} onCityInputChange={handleFromCityInputChange} />
+              </Box>
 
-          <Button 
+              <Box flex={1}>
+                <CityTextFild cityOptions={toCityOptions} city={toCity} onCityInputChange={handleToCityInputChange} />
+              </Box>
+
+              <Box flex={1}>
+                <TripDatePicker departure={departureFrom} setDeparture={setDepartureFrom} textLable='Departure From' />
+              </Box>
+
+              <Box flex={1}>
+                <TripDatePicker departure={departureUntil} setDeparture={setDepartureUntil} textLable='Departure Until' />
+              </Box>
+
+            </Box>
+
+            <Button 
             variant="contained" 
             color="primary" 
             type="submit"
             fullWidth
+            sx={{
+              backgroundColor: '#444b51',
+              opacity: 0.8,
+              '&:hover': {
+                backgroundColor: '#444b51',
+                opacity: 1,
+              }
+            }}
           >
             Search Trains
-          </Button>
-        </Box>
+            </Button>
 
-        {trains.length > 0 && (
-          <Box mt={4} width="100%">
+          </Box>
+          </Box>
+      
+          </Typography>
+        </Box>
+      </Box>
+
+      {trains.length === 0 && (
+        <Box 
+          display="flex" 
+          justifyContent="center" 
+          alignItems="center" 
+          minHeight="200px" 
+          sx={{ 
+            backgroundColor: '#444b51',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px',
+          }}
+        >
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: 'white',
+              textAlign: 'center',
+            }}
+          >
+            No trains match your search criteria. Please try again.
+          </Typography>
+        </Box>
+      )}
+
+      <Box 
+      display="flex"
+      padding="20px"
+      justifyContent="center"
+      >
+      {trains.length > 0 && (
+          <Box mt={4} width="70%">
+             <Typography variant="h5" gutterBottom>
+              {`Route from ${fromCity} to ${toCity}:`}
+            </Typography>
             <Typography variant="h5" gutterBottom>
               Available Trains:
             </Typography>
@@ -176,6 +241,27 @@ export default function PublicHome() {
           </Box>
         )}
       </Box>
+
+      {showScrollToTop && (
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={scrollToTop} 
+          sx={{
+            position: 'fixed', 
+            bottom: '20px', 
+            right: '20px', 
+            backgroundColor: '#444b51',
+            '&:hover': {
+              backgroundColor: '#555',
+            },
+          }}
+        >
+          Scroll to Top
+        </Button>
+      )}
+      
     </Container>
+    </>
   );
 }

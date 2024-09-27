@@ -6,7 +6,6 @@ import { useSignUp } from '../hooks/useSignUp';
 import { signUpSchema } from '../shared/validationSchemas';
 import Link from 'next/link';
 import { AdminRoutes } from '../shared/routes';
-import { AuthService } from '@/services/auth.service';
 
 const SignUp = () => {
   const { signUp, loading, error } = useSignUp();

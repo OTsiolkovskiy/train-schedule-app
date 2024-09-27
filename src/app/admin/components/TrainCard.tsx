@@ -1,6 +1,6 @@
 import { formatDate } from "@/app/utils/formatDateTime";
 import { ITrain } from "@/types/train.interface"
-import { Box, Button, Card, CardContent, Typography } from "@mui/material"
+import { Box, Button, Card, CardContent, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 
 type Props = {
   train: ITrain,
@@ -23,23 +23,38 @@ const TrainCard: React.FC<Props> = ({
         margin: "10px", 
         boxShadow: 3, 
         borderRadius: 2,
-        padding: '16px',
+        padding: '5px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: 'background.paper',
 
         "@media (max-width: 600px)": {
-          padding: "8px",
           flexDirection: "column"
         },
       }}
     >
-      <CardContent sx={{ flex: 1 }}>
-        <Typography variant="h6" sx={{ marginBottom: 1 }}>{`${train.from} to ${train.to}`}</Typography>
-        <Typography color="textSecondary">{`Train ID: ${train.id}`}</Typography>
-        <Typography color="textSecondary">{`Departure: ${formatDate(train.departure)}`}</Typography>
-        <Typography color="textSecondary">{`Arrival: ${formatDate(train.arrival)}`}</Typography>
+      <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
+        <Typography variant="h6" >{`${train.from} to ${train.to}`}</Typography>
+        <TableContainer component={Paper} sx={{  marginTop: '20px', backgroundColor: '#f5f5f5' }}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Train ID</TableCell>
+          <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Departure</TableCell>
+          <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Arrival</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell align="center" sx={{ padding: '16px' }}>{train.id}</TableCell>
+          <TableCell align="center" sx={{ padding: '16px' }}>{formatDate(train.departure)}</TableCell>
+          <TableCell align="center" sx={{ padding: '16px' }}>{formatDate(train.arrival)}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+
       </CardContent>
 
       {showActions && (

@@ -72,7 +72,6 @@ export default function Home() {
     return (
       <Container>
         <CircularProgress />
-        <Typography variant="h6">Loading trains...</Typography>
       </Container>
     );
   }
