@@ -39,7 +39,7 @@ const SignInPage = () => {
     const password = initialValues.password;
 
     try {
-        const res = await AuthService.sign_in({ email, password });
+        await AuthService.sign_in({ email, password });
         router.push('/admin');
     } catch (error) {
         console.log(error);
