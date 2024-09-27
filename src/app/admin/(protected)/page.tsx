@@ -29,8 +29,6 @@ export default function Home() {
     fetchTrains();
   }, []);
 
-  console.log(user);
-
   const fetchTrains = async () => {
     try {
       const data = await TrainService.getAllTrains();

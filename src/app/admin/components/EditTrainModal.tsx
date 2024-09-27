@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, TextField, Typography, Autocomplete } from "@mui/material";
 import { TrainService } from "@/services/train.service";
 import { ITrain } from "@/types/train.interface";
-import { fetchCities } from "@/app/utils/fetchCities";
 import { ICityOption } from "@/types/city.interface";
+import { CityService } from "@/services/city.service";
 
 type Props = {
   open: boolean;
@@ -67,7 +67,7 @@ const EditTrainModal: React.FC<Props> = ({
     setFromCity(value);
 
     if (value) {
-      const cities = await fetchCities(value);
+      const cities = await CityService.getCitiesByQuery(value);
       setFromCityOptions(cities);
     } else {
       setFromCityOptions([]);
@@ -82,7 +82,7 @@ const EditTrainModal: React.FC<Props> = ({
     setToCity(value);
 
     if (value) {
-      const cities = await fetchCities(value);
+      const cities = await CityService.getCitiesByQuery(value);
       setToCityOptions(cities);
     } else {
       setToCityOptions([]);

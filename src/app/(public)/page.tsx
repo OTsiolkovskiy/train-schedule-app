@@ -7,11 +7,11 @@ import { TrainService } from '@/services/train.service';
 
 import { Dayjs } from 'dayjs';
 import { ICityOption } from '@/types/city.interface';
-import { fetchCities } from '../utils/fetchCities';
 
 import { CityTextFild } from './components/CityTextField';
 import { TripDatePicker } from './components/TripDatePicker';
 import TrainCard from './components/TrainCard';
+import { CityService } from '@/services/city.service';
 
 
 export default function PublicHome() {
@@ -28,7 +28,7 @@ export default function PublicHome() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) { // Змінюйте значення за потреби
+      if (window.scrollY > 200) {
         setShowScrollToTop(true);
       } else {
         setShowScrollToTop(false);
@@ -53,7 +53,7 @@ export default function PublicHome() {
     setFromCity(value);
 
     if (value) {
-      const cities = await fetchCities(value);
+      const cities = await CityService.getCitiesByQuery(value);
       setFromCityOptions(cities);
     } else {
       setFromCityOptions([]);
@@ -68,7 +68,7 @@ export default function PublicHome() {
     setToCity(value);
 
     if (value) {
-      const cities = await fetchCities(value);
+      const cities = await CityService.getCitiesByQuery(value);
       setToCityOptions(cities);
     } else {
       setToCityOptions([]);
@@ -77,8 +77,6 @@ export default function PublicHome() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log('Hello')
 
     if (!fromCity || !toCity) {
       console.error("Please provide both 'From' and 'To' cities.");

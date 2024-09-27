@@ -40,15 +40,8 @@ const SignInPage = () => {
 
     try {
         const res = await AuthService.sign_in({ email, password });
-        console.log(res);
         router.push('/admin');
     } catch (error) {
-        // if (error.response && error.response.status === 401) {
-        //   console.log(ACCOUNT_NOT_FOUND_ERROR);
-        //   setErrorMessage(ACCOUNT_NOT_FOUND_ERROR);
-        // } else {
-        //   console.error("An error occurred while signing in:", error);
-        // }
         console.log(error);
     }
 }

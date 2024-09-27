@@ -2,12 +2,12 @@ import { ITrain } from "@/types/train.interface";
 import axios from "axios";
 import { Dayjs } from 'dayjs';
 
-// const BASE_URL = process.env.NEXT_PUBLIC_API
+const BASE_URL = process.env.NEXT_PUBLIC_API
 
 export const TrainService = {
   getAllTrains: async (): Promise<ITrain[]> => {
     try {
-      const response = await axios.get(`http://localhost:5050/train`, {
+      const response = await axios.get(`${BASE_URL}/train`, {
         withCredentials: true,
       });
 
@@ -20,7 +20,7 @@ export const TrainService = {
 
   addTrain: async (newTrain: ITrain): Promise<void> => {
     try {
-      await axios.post(`http://localhost:5050/train`, newTrain);
+      await axios.post(`${BASE_URL}/train`, newTrain);
     } catch (error) {
       console.error('Error adding train:', error);
       throw error;
@@ -29,7 +29,7 @@ export const TrainService = {
 
   deleteTrain: async (trainId: number): Promise<void> => {
     try {
-      await axios.delete(`http://localhost:5050/train/${trainId}`);
+      await axios.delete(`${BASE_URL}/train/${trainId}`);
     } catch (error) {
       console.error('Error deleting train:', error);
       throw error;
@@ -38,7 +38,7 @@ export const TrainService = {
 
   updateTrain: async (trainId: string, updatedTrainData: Partial<ITrain>): Promise<void> => {
     try {
-      await axios.patch(`http://localhost:5050/train/${trainId}`, updatedTrainData);
+      await axios.patch(`${BASE_URL}/train/${trainId}`, updatedTrainData);
     } catch (error) {
       console.error('Error editing train:', error);
       throw error;
@@ -47,7 +47,7 @@ export const TrainService = {
 
   findTrainsByCity: async (from: string, to: string, departureFrom?: Dayjs | null, departureUntil?: Dayjs | null): Promise<ITrain[]> => {
     try {
-      const response = await axios.get(`http://localhost:5050/train/search`, {
+      const response = await axios.get(`${BASE_URL}/train/search`, {
         params: {
           from,
           to,
