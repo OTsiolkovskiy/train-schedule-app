@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { createTheme } from "@mui/material";
 import { Roboto } from "next/font/google";
 import "./../globals.css";

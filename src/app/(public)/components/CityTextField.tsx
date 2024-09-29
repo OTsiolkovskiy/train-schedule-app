@@ -1,5 +1,5 @@
 import { ICityOption } from "@/types/city.interface";
-import { Autocomplete, Paper, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 
 type Props = {
   cityOptions: ICityOption[];

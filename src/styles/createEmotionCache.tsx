@@ -1,17 +1,21 @@
 "use client";
 
-import createCache from "@emotion/cache";
+import createCache, {Options} from "@emotion/cache";
 import { useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import publicTheme from "./themes/publicTheme";
 import adminTheme from "./themes/adminTheme";
 
-export default function ThemeRegistry(props: any) {
-  const { options, children, isAdmin } = props;
+type ThemeRegistryProps = {
+  options: Options;
+  children: ReactNode;
+  isAdmin: boolean;
+}
 
+export default function ThemeRegistry({ options, children, isAdmin }: ThemeRegistryProps) {
   const theme = isAdmin ? adminTheme : publicTheme;
 
   const [{ cache, flush }] = useState(() => {
