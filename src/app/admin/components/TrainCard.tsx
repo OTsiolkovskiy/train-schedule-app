@@ -32,7 +32,7 @@ const TrainCard: React.FC<Props> = ({
         },
       }}
     >
-        <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px', width: '100%'}}>
+        <CardContent sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center'}}>
           <Box flex={1}>
             <Typography variant="h6" >{`${train.from} to ${train.to}`}</Typography>
           </Box>
@@ -58,13 +58,13 @@ const TrainCard: React.FC<Props> = ({
           </TableContainer>
           </Box>
 
-          <Box flex={1}>
-          <Box display="flex" flexDirection="column" gap="15px" sx={{ marginLeft: '16px' }}>
+          {/* <Box flex={1}> */}
+          <Box flex={1} display="flex" flexDirection="column" gap="15px" width="100%" alignItems="center" >
             <Button
               variant="contained"
               color="secondary"
               onClick={() => train.id && handleDeleteTrain(train.id)}
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', maxWidth: '400px' }}
             >
               Delete
             </Button>
@@ -73,12 +73,12 @@ const TrainCard: React.FC<Props> = ({
               variant="contained"
               color="primary"
               onClick={() => handleEditOpen(train)}
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', maxWidth: '400px' }}
             >
             Edit
             </Button>
           </Box>
-          </Box>
+          {/* </Box> */}
 
         </CardContent>
     </Card>

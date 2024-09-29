@@ -23,12 +23,9 @@ const TrainCard: React.FC<Props> = ({ train }) => {
       }}
     >
       <CardContent 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: 'flex-start', 
-          justifyContent: 'space-between', 
-          gap: '20px' 
+         sx={{
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <Box 
@@ -75,6 +72,7 @@ const TrainCard: React.FC<Props> = ({ train }) => {
           >
             {`Train ID: ${train.id}`}
           </Box>
+
           <Box 
             sx={{ 
               flex: 1, 
@@ -107,6 +105,7 @@ const TrainCard: React.FC<Props> = ({ train }) => {
           >
             {`Arrival: ${formatDate(train.arrival)}`}
           </Box>
+          
         </Box>
       </CardContent>
     </Card>
