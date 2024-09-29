@@ -4,16 +4,14 @@ import { Box, Button, Card, CardContent, Paper, Table, TableBody, TableCell, Tab
 
 type Props = {
   train: ITrain,
-  handleDeleteTrain?: (trainId: number) => void,
-  handleEditOpen?: (train: ITrain) => void;
-  showActions: boolean
+  handleDeleteTrain: (trainId: number) => void,
+  handleEditOpen: (train: ITrain) => void;
 }
 
 const TrainCard: React.FC<Props> = ({ 
   train, 
   handleDeleteTrain,
   handleEditOpen,
-  showActions = true,
 }) => {
 
   return (
@@ -34,54 +32,55 @@ const TrainCard: React.FC<Props> = ({
         },
       }}
     >
-      <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-        <Typography variant="h6" >{`${train.from} to ${train.to}`}</Typography>
-        <TableContainer component={Paper} sx={{  marginTop: '20px', backgroundColor: '#f5f5f5' }}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Train ID</TableCell>
-          <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Departure</TableCell>
-          <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Arrival</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        <TableRow>
-          <TableCell align="center" sx={{ padding: '16px' }}>{train.id}</TableCell>
-          <TableCell align="center" sx={{ padding: '16px' }}>{formatDate(train.departure)}</TableCell>
-          <TableCell align="center" sx={{ padding: '16px' }}>{formatDate(train.arrival)}</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  </TableContainer>
+        <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px', width: '100%'}}>
+          <Box flex={1}>
+            <Typography variant="h6" >{`${train.from} to ${train.to}`}</Typography>
+          </Box>
+          
+          <Box flex={2}>
+          <TableContainer component={Paper} sx={{  marginTop: '20px', backgroundColor: '#f5f5f5' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Train ID</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Departure</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', padding: '16px' }}>Arrival</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell align="center" sx={{ padding: '16px' }}>{train.id}</TableCell>
+                  <TableCell align="center" sx={{ padding: '16px' }}>{formatDate(train.departure)}</TableCell>
+                  <TableCell align="center" sx={{ padding: '16px' }}>{formatDate(train.arrival)}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          </Box>
 
-      </CardContent>
+          <Box flex={1}>
+          <Box display="flex" flexDirection="column" gap="15px" sx={{ marginLeft: '16px' }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => train.id && handleDeleteTrain(train.id)}
+              sx={{ width: '100%' }}
+            >
+              Delete
+            </Button>
 
-      {showActions && (
-        <Box display="flex" flexDirection="column" gap="15px" sx={{ marginLeft: '16px' }}>
-        {handleDeleteTrain && (
-          <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => train.id && handleDeleteTrain(train.id)}
-          sx={{ width: '100%' }}
-        >
-          Delete
-        </Button>
-        )}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleEditOpen(train)}
+              sx={{ width: '100%' }}
+            >
+            Edit
+            </Button>
+          </Box>
+          </Box>
 
-        {handleEditOpen && (
-          <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleEditOpen(train)}
-          sx={{ width: '100%' }}
-        >
-          Edit
-        </Button>
-        )}
-      </Box>
-      )}
+        </CardContent>
     </Card>
   )
 };

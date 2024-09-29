@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import * as yup from 'yup';
 import { AdminRoutes } from "../shared/routes";
 import Link from "next/link";
+import { useState } from "react";
 
 interface InitialValuesType {
   email: string,
@@ -25,14 +26,14 @@ const validationSchema = yup.object({
 });
 
 const SignInPage = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const initialValues: InitialValuesType = ({
     email: '',
     password: ''
   });
 
   const router = useRouter();
-
-  const isShowPassword = true;
 
   const handleSignInWithCredential = async (initialValues: InitialValuesType) => {
     const email = initialValues.email;
@@ -42,19 +43,13 @@ const SignInPage = () => {
         await AuthService.sign_in({ email, password });
         router.push('/admin');
     } catch (error) {
+        setErrorMessage("Invalid email or password. Please try again.");
         console.log(error);
     }
 }
 
   return (
     <div>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Link href={`/${AdminRoutes.home}`} passHref >
-          Go Home
-        </Link>
-      </Box>
-
-
       <Formik 
         initialValues={initialValues} 
         validationSchema={validationSchema}
@@ -129,7 +124,7 @@ const SignInPage = () => {
 
                           <Field
                             name="password"
-                            type={isShowPassword ? 'text' : 'password'}
+                            type="password"
                             as={TextField}
                             className="subvariant-hovered"
                             placeholder="Enter your password"
@@ -149,6 +144,12 @@ const SignInPage = () => {
                             Keep Me Signed In
                           </Typography>
                         </Box> */}
+
+                        {errorMessage && (
+                          <Typography color="red">
+                            {errorMessage}
+                          </Typography>
+                        )}
 
                         <Button 
                           type="submit"

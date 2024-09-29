@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Modal, Button, TextField, Typography, Autocomplete } from "@mui/material";
+import {
+  Modal,
+  Button,
+  TextField,
+  Typography,
+  Autocomplete,
+} from "@mui/material";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
+import * as Yup from "yup";
 import { TrainService } from "@/services/train.service";
 import { ITrain } from "@/types/train.interface";
 import { ICityOption } from "@/types/city.interface";
@@ -14,78 +22,84 @@ type Props = {
   train: ITrain;
 };
 
-const EditTrainModal: React.FC<Props> = ({ 
-  open, 
-  handleClose, 
-  refreshTrains, 
-  train 
+const EditTrainModal: React.FC<Props> = ({
+  open,
+  handleClose,
+  refreshTrains,
+  train,
 }) => {
-  const [departure, setDeparture] = useState(train.departure);
-  const [arrival, setArrival] = useState(train.arrival);
-
-  const [fromCity, setFromCity] = useState<string>('');
-  const [toCity, setToCity] = useState<string>('');
   const [fromCityOptions, setFromCityOptions] = useState<ICityOption[]>([]);
   const [toCityOptions, setToCityOptions] = useState<ICityOption[]>([]);
 
   useEffect(() => {
     if (train) {
-      setFromCity(train.from);
-      setToCity(train.to);
-      setDeparture(new Date(train.departure).toISOString().slice(0, 16));
-      setArrival(new Date(train.arrival).toISOString().slice(0, 16));
+      CityService.getCitiesByQuery(train.from).then((cities) => {
+        setFromCityOptions(cities);
+      });
+  
+      CityService.getCitiesByQuery(train.to).then((cities) => {
+        setToCityOptions(cities);
+      });
     }
   }, [train]);
 
-  const handleEditTrain = async () => {
+  const validationSchema = Yup.object().shape({
+    fromCity: Yup.string().required("Departure city is required"),
+    toCity: Yup.string().required("Destination city is required"),
+    departure: Yup.date().required("Departure date is required"),
+    arrival: Yup.date()
+      .required("Arrival date is required")
+      .min(Yup.ref("departure"), "Arrival must be later than departure"),
+  });
+
+  const handleCityInputChange = async (
+    setCityOptions: React.Dispatch<React.SetStateAction<ICityOption[]>>,
+    value: string
+  ) => {
+    if (value) {
+      const cities = await CityService.getCitiesByQuery(value);
+      setCityOptions(cities);
+    } else {
+      setCityOptions([]);
+    }
+  };
+
+  const handleEditTrain = async (
+    values: {
+      fromCity: string;
+      toCity: string;
+      departure: string;
+      arrival: string;
+    },
+    {
+      resetForm,
+    }: FormikHelpers<{
+      fromCity: string;
+      toCity: string;
+      departure: string;
+      arrival: string;
+    }>
+  ) => {
     if (!train?.id) {
       console.error("Train ID is not defined.");
       return;
     }
-  
+
     const updatedTrain: ITrain = {
       ...train,
-      from: fromCity,
-      to: toCity,
-      departure: new Date(departure).toISOString(),
-      arrival: new Date(arrival).toISOString(),
+      from: values.fromCity,
+      to: values.toCity,
+      departure: new Date(values.departure).toISOString(),
+      arrival: new Date(values.arrival).toISOString(),
     };
 
     try {
       await TrainService.updateTrain(train.id.toString(), updatedTrain);
       refreshTrains();
+      resetForm();
       handleClose();
     } catch (error) {
       console.error("Error updating train:", error);
-    }
-  };
-
-  const handleFromCityInputChange = async (
-    event: React.SyntheticEvent<Element, Event>, 
-    value: string, 
-  ) => {
-    setFromCity(value);
-
-    if (value) {
-      const cities = await CityService.getCitiesByQuery(value);
-      setFromCityOptions(cities);
-    } else {
-      setFromCityOptions([]);
-    }
-
-  };
-
-  const handleToCityInputChange = async (
-    event: React.SyntheticEvent<Element, Event>, 
-    value: string,
-  ) => {
-    setToCity(value);
-
-    if (value) {
-      const cities = await CityService.getCitiesByQuery(value);
-      setToCityOptions(cities);
-    } else {
-      setToCityOptions([]);
     }
   };
 
@@ -93,60 +107,103 @@ const EditTrainModal: React.FC<Props> = ({
     <Modal open={open} onClose={handleClose}>
       <div style={{ padding: 20, backgroundColor: "white", borderRadius: 5 }}>
         <Typography variant="h6">Edit Train</Typography>
-
-        <Autocomplete
-            options={fromCityOptions}
-            getOptionLabel={(option) => option.city}
-            value={fromCityOptions.find(option => option.city === fromCity) || null}
-            onInputChange={handleFromCityInputChange}
-            renderInput={(params) => (
-              <TextField 
-                {...params} 
-                label="From" 
-                variant="outlined" 
-                fullWidth 
-                placeholder="Enter departure city"
-                margin="normal"
+        <Formik
+          initialValues={{
+            fromCity: train.from,
+            toCity: train.to,
+            departure: new Date(train.departure).toISOString().slice(0, 16),
+            arrival: new Date(train.arrival).toISOString().slice(0, 16),
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleEditTrain}
+        >
+          {({ setFieldValue, values }) => (
+            <Form>
+              <Autocomplete
+                options={fromCityOptions}
+                getOptionLabel={(option) => option.city}
+                value={
+                  fromCityOptions.find(
+                    (option) => option.city === values.fromCity
+                  ) || null
+                }
+                onInputChange={(event, value) => {
+                  setFieldValue("fromCity", value);
+                  handleCityInputChange(setFromCityOptions, value);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="From"
+                    variant="outlined"
+                    fullWidth
+                    placeholder="Enter departure city"
+                    margin="normal"
+                  />
+                )}
               />
-            )}
-          />
+              <ErrorMessage name="fromCity">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
 
-          <Autocomplete
-            options={toCityOptions}
-            getOptionLabel={(option) => option.city}
-            value={toCityOptions.find(option => option.city === toCity) || null}
-            onInputChange={handleToCityInputChange}
-            renderInput={(params) => (
-              <TextField 
-                {...params} 
-                label="To" 
-                variant="outlined" 
-                fullWidth 
-                placeholder="Enter destination city"
-                margin="normal"
+              <Autocomplete
+                options={toCityOptions}
+                getOptionLabel={(option) => option.city}
+                value={
+                  toCityOptions.find((option) => option.city === values.toCity) ||
+                  null
+                }
+                onInputChange={(event, value) => {
+                  setFieldValue("toCity", value);
+                  handleCityInputChange(setToCityOptions, value);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="To"
+                    variant="outlined"
+                    fullWidth
+                    placeholder="Enter destination city"
+                    margin="normal"
+                  />
+                )}
               />
-            )}
-          />
+              <ErrorMessage name="toCity">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
 
-        <TextField
-          label="Departure"
-          type="datetime-local"
-          value={departure}
-          onChange={(e) => setDeparture(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Arrival"
-          type="datetime-local"
-          value={arrival}
-          onChange={(e) => setArrival(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
-        <Button onClick={handleEditTrain} variant="contained" color="primary">
-          Save Changes
-        </Button>
+              <Field
+                as={TextField}
+                label="Departure"
+                type="datetime-local"
+                name="departure"
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+              />
+              <ErrorMessage name="departure">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+
+              <Field
+                as={TextField}
+                label="Arrival"
+                type="datetime-local"
+                name="arrival"
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+              />
+              <ErrorMessage name="arrival">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+
+              <Button type="submit" variant="contained" color="primary">
+                Save Changes
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </Modal>
   );

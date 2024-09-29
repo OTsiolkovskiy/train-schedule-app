@@ -17,15 +17,22 @@ export const useSignUp = () => {
   const signUp = async (values: SignUpValues) => {
     setLoading(true);
     setError(null);
+
     try {
       await AuthService.sign_up(values);
       router.push(`/${AdminRoutes.default}`);
     } catch (err) {
-      setError('Failed to sign up. Please try again.');
+      const error = err as { response?: { status: number } };
+      
+      if (error.response?.status === 409) {
+        setError('User already exists with this email address.');
+      } else {
+        setError('Failed to sign up. Please try again.');
+      }
       console.error(err);
     } finally {
       setLoading(false);
-    }
+    } 
   };
 
   return { signUp, loading, error };

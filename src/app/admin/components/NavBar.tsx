@@ -2,7 +2,6 @@ import { AuthService } from "@/services/auth.service";
 import { AppBar, Avatar, Box, Button, Toolbar, Typography } from "@mui/material"
 import { AdminRoutes } from "../auth/shared/routes";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 type Props = {
   userName: string;
@@ -27,12 +26,8 @@ export const NavBar: React.FC<Props> = ({ userName }) => {
 
   return (
     <AppBar position="static">
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Link href={`/${AdminRoutes.home}`} passHref >
-          Go Home
-        </Link>
-      </Box>
+      <Toolbar sx={{ justifyContent: "flex-end" }}>
+      
 
       <Box sx={{ display: "flex", alignItems: "center" }}>
       <Typography variant="h6" sx={{ mr: 2 }}>

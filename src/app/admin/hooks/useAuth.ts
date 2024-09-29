@@ -26,6 +26,10 @@ const useAuthStatus = () => {
     fetchUserSession();
   }, []);
 
+  console.log(user);
+  console.log(isLoggedIn);
+  console.log(loading);
+
   return {
     user,
     isLoggedIn,

@@ -160,7 +160,7 @@ export default function PublicHome() {
               </Box>
 
               <Box flex={1}>
-                <TripDatePicker departure={departureUntil} setDeparture={setDepartureUntil} textLable='Departure Until' />
+                <TripDatePicker departure={departureUntil} setDeparture={setDepartureUntil} textLable='Departure Until' minDate={departureFrom} />
               </Box>
 
             </Box>

@@ -29,6 +29,8 @@ export default function Home() {
     fetchTrains();
   }, []);
 
+  console.log(selectedTrain);
+
   const fetchTrains = async () => {
     try {
       const data = await TrainService.getAllTrains();
@@ -122,7 +124,6 @@ export default function Home() {
               train={train} 
               handleDeleteTrain={handleDeleteTrain}
               handleEditOpen={handleEditOpen}
-              showActions={true}
              />
           </>
         ))}

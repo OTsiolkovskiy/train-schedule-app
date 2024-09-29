@@ -61,7 +61,7 @@ const TrainCard: React.FC<Props> = ({ train }) => {
 
           <Box 
             sx={{ 
-              flex: 1, 
+              flex: 0.5, 
               textAlign: 'center', 
               fontWeight: '500', 
               border: '1px solid #ccc',

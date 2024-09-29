@@ -6,9 +6,10 @@ type Props = {
   departure: Dayjs | null;
   setDeparture: (value: Dayjs | null) => void;
   textLable: string;
+  minDate?: Dayjs | null; 
 }
 
-export const TripDatePicker: React.FC<Props> = ({ departure, setDeparture, textLable }) => {
+export const TripDatePicker: React.FC<Props> = ({ departure, setDeparture, textLable, minDate }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <DatePicker
@@ -19,7 +20,7 @@ export const TripDatePicker: React.FC<Props> = ({ departure, setDeparture, textL
           setDeparture(newValue);
         }
       }}
-      minDate={dayjs()}
+      minDate={minDate || dayjs()}
       slotProps={{
         textField: {
           variant: 'outlined',
