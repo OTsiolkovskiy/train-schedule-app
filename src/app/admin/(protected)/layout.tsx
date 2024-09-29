@@ -3,7 +3,7 @@
 import useAuthStatus from "../hooks/useAuth";
 import LoadingProvider from "../providers/loading.provider"
 
-const AdminLayout = ({ children }: React.PropsWithChildren) => {
+const PrivateLayout = ({ children }: React.PropsWithChildren) => {
   const { isLoggedIn, loading} = useAuthStatus();
   return (
     <LoadingProvider isLoading={loading} isAuth={isLoggedIn}>
@@ -12,4 +12,4 @@ const AdminLayout = ({ children }: React.PropsWithChildren) => {
   )
 }
 
-export default AdminLayout;
+export default PrivateLayout;

@@ -110,7 +110,7 @@ export default function PublicHome() {
           display: 'flex',
           justifyContent: 'center',
           overflow: 'hidden',
-          backgroundImage: 'url("/img/photo.jpg")',
+          backgroundImage: 'url("/img/railway-1555348.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -148,11 +148,16 @@ export default function PublicHome() {
             >
 
               <Box flex={1}>
-                <CityTextFild cityOptions={fromCityOptions} city={fromCity} onCityInputChange={handleFromCityInputChange} />
+                <CityTextFild 
+                  cityOptions={fromCityOptions} 
+                  city={fromCity} 
+                  onCityInputChange={handleFromCityInputChange} 
+                  lable='From' 
+                />
               </Box>
 
               <Box flex={1}>
-                <CityTextFild cityOptions={toCityOptions} city={toCity} onCityInputChange={handleToCityInputChange} />
+                <CityTextFild cityOptions={toCityOptions} city={toCity} onCityInputChange={handleToCityInputChange} lable='To' />
               </Box>
 
               <Box flex={1}>

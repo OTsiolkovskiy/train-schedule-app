@@ -32,7 +32,16 @@ const AddTrainModal: React.FC<Props> = ({
   const validationSchema = Yup.object().shape({
     fromCity: Yup.string().required("Departure city is required"),
     toCity: Yup.string().required("Destination city is required"),
-    departure: Yup.string().required("Departure time is required"),
+    departure: Yup.string()
+    .required("Departure time is required")
+    .test(
+      "is-future-or-equal",
+      "Departure time must be in the future or now",
+      function (value) {
+        const currentDateTime = new Date().toISOString();
+        return value >= currentDateTime;
+      }
+    ),
     arrival: Yup.string()
       .required("Arrival time is required")
       .test(

@@ -1,14 +1,19 @@
 'use client';
 
 import { Formik, Field, Form } from 'formik';
-import { Box, TextField, Typography, Button } from '@mui/material';
+import { Box, TextField, Typography, Button, InputAdornment, IconButton } from '@mui/material';
 import { useSignUp } from '../hooks/useSignUp';
 import { signUpSchema } from '../shared/validationSchemas';
 import Link from 'next/link';
 import { AdminRoutes } from '../shared/routes';
+import { useState } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import adminTheme from '@/styles/themes/adminTheme';
 
 const SignUp = () => {
   const { signUp, loading, error } = useSignUp();
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
 
   const initialValues = {
     name: '',
@@ -17,8 +22,21 @@ const SignUp = () => {
     confirmPassword: ''
   };
 
+  const togglePasswordVisibility = () => {
+    setIsShowPassword(prev => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setIsShowConfirmPassword(prev => !prev);
+  }
+
   return (
-    <Box sx={{ margin: "auto", height: "100vh", width: "50vw"}}>
+    <Box sx={{  display: "flex", 
+      justifyContent: "center", 
+      alignItems: "center", 
+      height: "100vh", 
+      width: "100vw", 
+      margin: "auto" }}>
       <Formik
         initialValues={initialValues}
         validationSchema={signUpSchema}
@@ -29,7 +47,7 @@ const SignUp = () => {
       >
         {({ errors, touched, isValid, dirty }) => (
           <Form>
-            <Box display="flex" flexDirection="column" gap="1.5rem" sx={{ width: '100%' }}>
+            <Box display="flex" flexDirection="column" gap="1.5rem" sx={{ width: '70vh' }}>
               <Typography variant="h4" color="white">Create Account</Typography>
 
               {error && <Typography color="red">{error}</Typography>}
@@ -58,24 +76,56 @@ const SignUp = () => {
 
               <Field
                 name="password"
-                type="password"
+                type={isShowPassword ? "text" : "password"}
                 as={TextField}
                 label="Password"
                 placeholder="Enter your password"
                 error={Boolean(errors.password) && Boolean(touched.password)}
                 helperText={Boolean(touched.password) && errors.password}
                 fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={togglePasswordVisibility}
+                        edge="end"
+                      >
+                        {isShowPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
 
               <Field
                 name="confirmPassword"
-                type="password"
+                type={isShowConfirmPassword ? "text" : "password"}
                 as={TextField}
                 label="Confirm Password"
                 placeholder="Confirm your password"
                 error={Boolean(errors.confirmPassword) && Boolean(touched.confirmPassword)}
                 helperText={Boolean(touched.confirmPassword) && errors.confirmPassword}
                 fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={toggleConfirmPasswordVisibility}
+                        edge="end"
+                      >
+                        {isShowPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
 
               <Button
@@ -83,13 +133,25 @@ const SignUp = () => {
                 variant="contained"
                 color="primary"
                 disabled={!isValid ? !dirty : loading}
+                style={{
+                  padding: "10px 20px",
+                }}
               >
                 {loading ? 'Signing Up...' : 'Sign Up'}
               </Button>
 
-              <Typography variant="body1">
-                Already have an Account? <Link href={`/${AdminRoutes.signIn}`}>Sign In</Link>
-              </Typography>
+                <Box display="flex" justifyContent="center">
+                  <Typography variant="body1">
+                    Already have an Account? 
+                    <Link 
+                      href={`/${AdminRoutes.signIn}`}
+                      style={{
+                        color: adminTheme.palette.textColors.medium,
+                      }}
+                    >
+                    Sign In</Link>
+                  </Typography>
+                </Box>
             </Box>
           </Form>
         )}
