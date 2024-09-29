@@ -58,7 +58,6 @@ const TrainCard: React.FC<Props> = ({
           </TableContainer>
           </Box>
 
-          {/* <Box flex={1}> */}
           <Box flex={1} display="flex" flexDirection="column" gap="15px" width="100%" alignItems="center" >
             <Button
               variant="contained"
@@ -78,7 +77,6 @@ const TrainCard: React.FC<Props> = ({
             Edit
             </Button>
           </Box>
-          {/* </Box> */}
 
         </CardContent>
     </Card>

@@ -56,7 +56,7 @@ const SignInPage = () => {
 
   return (
     <div>
-      <Formik
+   <Formik
         initialValues={initialValues}
         validationSchema={signInSchema}
         onSubmit={handleSignInWithCredential}
@@ -66,119 +66,84 @@ const SignInPage = () => {
             display="flex"
             flexDirection="column"
             justifyContent="center"
+            alignItems="center"
             height="100vh"
+            sx={{ padding: { xs: "20px", sm: "40px" }, backgroundColor: 'background.default' }}
           >
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Grid container justifyContent="center" spacing={3}>
-                <Grid item xs={12} sm={8} md={6} lg={4}>
-                  <Box display="flex" flexDirection="column" gap="40px">
+            <Grid container justifyContent="center">
+              <Grid item xs={12} sm={8} md={6} lg={4}>
+                <Box display="flex" flexDirection="column" gap="30px">
+                  <Form>
                     <Box display="flex" flexDirection="column" gap="30px">
-                      <Box display="flex" flexDirection="column" gap="30px">
-                        <Form>
-                          <Box display="flex" flexDirection="column" gap="30px">
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap="15px"
-                            >
-                              <Typography>Email</Typography>
+                      <Box display="flex" flexDirection="column" gap="15px">
+                        <Typography variant="h6" align="center">Sign In</Typography>
 
-                              <Field
-                                name="email"
-                                type="email"
-                                as={TextField}
-                                className="subvariant-hovered"
-                                placeholder="Enter your email address..."
-                                error={
-                                  Boolean(errors.email) &&
-                                  Boolean(touched.email)
-                                }
-                                helperText={
-                                  Boolean(touched.email) && errors.email
-                                }
-                              />
-                            </Box>
-
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap="15px"
-                            >
-                              <Box
-                                display="flex"
-                                justifyContent="space-between"
-                              >
-                                <Typography>Password</Typography>
-                              </Box>
-
-                              <Field
-                                name="password"
-                                type={isShowPassword ? "text" : "password"}
-                                as={TextField}
-                                className="subvariant-hovered"
-                                placeholder="Enter your password"
-                                error={
-                                  Boolean(errors.password) &&
-                                  Boolean(touched.password)
-                                }
-                                helperText={
-                                  Boolean(touched.password) && errors.password
-                                }
-                                InputProps={{
-                                  endAdornment: (
-                                    <InputAdornment position="end">
-                                      <IconButton
-                                        onClick={togglePasswordVisibility}
-                                        edge="end"
-                                      >
-                                        {isShowPassword ? (
-                                          <VisibilityOff />
-                                        ) : (
-                                          <Visibility />
-                                        )}
-                                      </IconButton>
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            </Box>
-
-                            {errorMessage && (
-                              <Typography color="red">
-                                {errorMessage}
-                              </Typography>
-                            )}
-
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              style={{
-                                padding: "10px 20px",
-                              }}
-                            >
-                              Sign In
-                            </Button>
-                            <Box display="flex" justifyContent="center">
-                              <Typography variant="body1">
-                                Already have no an Account?{" "}
-                                <Link
-                                  href={`/${AdminRoutes.signUp}`}
-                                  style={{
-                                    color: adminTheme.palette.textColors.medium,
-                                  }}
-                                >
-                                  Sign Up
-                                </Link>
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Form>
+                        <Field
+                          name="email"
+                          type="email"
+                          as={TextField}
+                          className="subvariant-hovered"
+                          placeholder="Enter your email address..."
+                          error={Boolean(errors.email) && Boolean(touched.email)}
+                          helperText={Boolean(touched.email) && errors.email}
+                          fullWidth
+                        />
                       </Box>
+
+                      <Box display="flex" flexDirection="column" gap="15px">
+                        <Typography>Password</Typography>
+
+                        <Field
+                          name="password"
+                          type={isShowPassword ? "text" : "password"}
+                          as={TextField}
+                          className="subvariant-hovered"
+                          placeholder="Enter your password"
+                          error={Boolean(errors.password) && Boolean(touched.password)}
+                          helperText={Boolean(touched.password) && errors.password}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton onClick={togglePasswordVisibility} edge="end">
+                                  {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                          fullWidth
+                        />
+                      </Box>
+
+                      {errorMessage && (
+                        <Typography color="error" align="center">
+                          {errorMessage}
+                        </Typography>
+                      )}
+
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ padding: "10px 20px", width: '100%' }}
+                      >
+                        Sign In
+                      </Button>
                     </Box>
-                  </Box>
-                </Grid>
+
+                    <Box display="flex" justifyContent="center" mt={2}>
+                      <Typography variant="body1">
+                        Already have no an Account?{" "}
+                        <Link
+                          href={`/${AdminRoutes.signUp}`}
+                          style={{ color: adminTheme.palette.textColors.medium }}
+                        >
+                          Sign Up
+                        </Link>
+                      </Typography>
+                    </Box>
+                  </Form>
+                </Box>
               </Grid>
-            </Box>
+            </Grid>
           </Box>
         )}
       </Formik>

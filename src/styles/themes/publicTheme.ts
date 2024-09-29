@@ -48,31 +48,31 @@ const publicTheme = createTheme({
       styleOverrides: {
         root: {
           "& label": {
-            color: "#FFFFFF", // Лейбл текст колір білий
+            color: "#FFFFFF",
             "&.Mui-focused": {
-              color: "#FFFFFF", // Лейбл текст колір білий при фокусі
+              color: "#FFFFFF",
             },
             "&.MuiFormLabel-filled": {
-              color: "#FFFFFF", // Лейбл текст колір білий коли поле заповнене
+              color: "#FFFFFF",
             },
           },
           "& .MuiOutlinedInput-root": {
-            color: "#FFFFFF", // Інпут текст колір білий
+            color: "#FFFFFF",
             "& fieldset": {
-              borderColor: "#FFFFFF", // Рамка колір білий
+              borderColor: "#FFFFFF",
             },
             "&:hover fieldset": {
-              borderColor: "#FFFFFF", // Рамка колір на hover білий
+              borderColor: "#FFFFFF",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#FFFFFF", // Рамка колір при фокусі білий
+              borderColor: "#FFFFFF",
             },
             "& input::placeholder": {
-              color: "#8F9EA5", // Колір підказки
+              color: "#8F9EA5",
             },
           },
           "&:hover": {
-            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Фоновий колір на hover
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
           }
         }
       }
@@ -81,21 +81,21 @@ const publicTheme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiAutocomplete-option": {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Опція фон колір
-            color: "#FFFFFF", // Опція текст колір білий
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: "#FFFFFF",
             "&:hover": {
-              backgroundColor: 'rgba(255, 255, 255, 0.5)', // Фоновий колір на hover
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
             },
           },
         },
         paper: {
-          backgroundColor: 'rgba(74, 78, 80, 0.8)', // Фоновий колір паперу
-          color: "#FFFFFF", // Текст колір паперу білий
+          backgroundColor: 'rgba(74, 78, 80, 0.8)',
+          color: "#FFFFFF",
         },
         clearIndicator: {
-          color: "#FFFFFF", // Колір іконки закриття білий
+          color: "#FFFFFF",
           "&:hover": {
-            color: "#FFFFFF", // Колір іконки закриття на hover білий
+            color: "#FFFFFF",
           },
         },
       }
